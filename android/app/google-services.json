@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "102691805506",
+    "project_id": "gotrip-b2d6a",
+    "storage_bucket": "gotrip-b2d6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:102691805506:android:dc9325a6382b444e5d90db",
+        "android_client_info": {
+          "package_name": "com.example.gotrip"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "102691805506-2ncmo8l01ht3ecu75894nrtmf3oci40r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQNCUrxuiUZYslsph4ca_DPxyphsfkdqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "102691805506-2ncmo8l01ht3ecu75894nrtmf3oci40r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
