@@ -31,11 +31,11 @@ class _Login_pageState extends State<Login_page> {
   bool passerror = false;
   bool hidepass = true;
 
-  String ImagePath = "";
 
   String emailmsg = "";
   String passmsg = "";
 
+  String ImagePath = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(

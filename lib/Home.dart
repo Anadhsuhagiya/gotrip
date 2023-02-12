@@ -1,8 +1,10 @@
-
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gotrip/Categories/Countries.dart';
 import 'package:shrink_sidemenu/shrink_sidemenu.dart';
@@ -14,7 +16,6 @@ import 'Model.dart';
 import 'Story.dart';
 
 class Home extends StatefulWidget {
-
   String imagePath;
   String name;
   String email;
@@ -32,10 +33,92 @@ class _HomeState extends State<Home> {
   TextEditingController Search = TextEditingController();
   StoryController storyController = StoryController();
 
+  int status = 0;
+
+  Connectivity _connectivity = Connectivity();
+
+  checkRealTimeConnection() {
+    _connectivity.onConnectivityChanged.listen((event) {
+      if (event == ConnectivityResult.mobile) {
+        status = 1;
+        // I am connected to a mobile network.
+      } else if (event == ConnectivityResult.wifi) {
+        status = 1;
+        // I am connected to a wifi network.
+      } else {
+        status = 0;
+      }
+      setState(() {});
+    });
+  }
+
+  snack() {
+    if (status == 1) {
+      final snackbar = SnackBar(
+        /// need to set following properties for best effect of awesome_snackbar_content
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'On Snap!',
+          message: 'Back Online',
+
+          /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+          contentType: ContentType.success,
+        ),
+      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackbar);
+    } else if (status == 0) {
+      final snackbar = SnackBar(
+        /// need to set following properties for best effect of awesome_snackbar_content
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'On Snap!',
+          message: 'Not Connected',
+
+          /// change contentType to ContentType.success, ContentType.warning or ContentType.help for variants
+          contentType: ContentType.failure,
+        ),
+      );
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackbar);
+    }
+    ;
+    setState(() {});
+  }
+
   @override
   void initState() {
     title = "Home";
     super.initState();
+    checkRealTimeConnection();
+  }
+
+  Future<bool?> toas() {
+    checkRealTimeConnection();
+    return status == 1
+        ? Fluttertoast.showToast(
+            msg: "Back Online",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 15.0)
+        : Fluttertoast.showToast(
+            msg: "Not Connected",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 15.0);
+    setState(() {});
   }
 
   int _counter = 0;
@@ -71,76 +154,82 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return
-    // SideMenu(
-    //     key: _endSideMenuKey,
-    //     inverse: false,
-    //     // start side menu
-    //     background: Color(0xffa9e6ef),
-    //     type: SideMenuType.slideNRotate,
-    //     menu: Padding(
-    //       padding: const EdgeInsets.only(left: 25.0),
-    //       child: buildMenu(),
-    //     ),
-    //     onChange: (_isOpened) {
-    //       setState(() => isOpened = _isOpened);
-    //     },
-    //     child:
+        // SideMenu(
+        //     key: _endSideMenuKey,
+        //     inverse: false,
+        //     // start side menu
+        //     background: Color(0xffa9e6ef),
+        //     type: SideMenuType.slideNRotate,
+        //     menu: Padding(
+        //       padding: const EdgeInsets.only(left: 25.0),
+        //       child: buildMenu(),
+        //     ),
+        //     onChange: (_isOpened) {
+        //       setState(() => isOpened = _isOpened);
+        //     },
+        //     child:
         MaterialApp(
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: 'arial',
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'arial',
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: Scaffold(
+        // appBar: AppBar(
+        //   flexibleSpace: Container(
+        //     decoration: BoxDecoration(
+        //         gradient: LinearGradient(
+        //             colors: [Color(0xff06b5d7), Color(0xff6dd9ef)])),
+        //   ),
+        //   title: Text(
+        //     "Big Show Room",
+        //     style: TextStyle(
+        //         color: Colors.white,
+        //         fontSize: 25,
+        //         letterSpacing: 1,
+        //         shadows: [
+        //           Shadow(
+        //               color: Colors.black, offset: Offset(2, 3), blurRadius: 13)
+        //         ]),
+        //   ),
+        //   centerTitle: true,
+        // ),
+        appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Color(0xff06b5d7), Color(0xff6dd9ef)])),
           ),
-          home: Scaffold(
-            // appBar: AppBar(
-            //   flexibleSpace: Container(
-            //     decoration: BoxDecoration(
-            //         gradient: LinearGradient(
-            //             colors: [Color(0xff06b5d7), Color(0xff6dd9ef)])),
-            //   ),
-            //   title: Text(
-            //     "Big Show Room",
-            //     style: TextStyle(
-            //         color: Colors.white,
-            //         fontSize: 25,
-            //         letterSpacing: 1,
-            //         shadows: [
-            //           Shadow(
-            //               color: Colors.black, offset: Offset(2, 3), blurRadius: 13)
-            //         ]),
-            //   ),
-            //   centerTitle: true,
-            // ),
-            appBar: AppBar(
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                        colors: [Color(0xff06b5d7), Color(0xff6dd9ef)])),
-              ),
-              centerTitle: true,
-              leading: IconButton(
-                icon: const Icon(Icons.menu,color: Colors.black,),
-                onPressed: () {
-                  if(ZoomDrawer.of(context)!.isOpen())
-                    {
-                      ZoomDrawer.of(context)!.close();
-                    }
-                  else
-                    {
-                      ZoomDrawer.of(context)!.open();
-                    }
-                },
-              ),
-              title: Text("GoTrip",style: GoogleFonts.signikaNegative(textStyle: TextStyle(fontSize: 22, color: Colors.black))),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.black,
             ),
-            body: SingleChildScrollView(
+            onPressed: () {
+              if (ZoomDrawer.of(context)!.isOpen()) {
+                ZoomDrawer.of(context)!.close();
+              } else {
+                ZoomDrawer.of(context)!.open();
+              }
+            },
+          ),
+          title: Text("GoTrip",
+              style: GoogleFonts.signikaNegative(
+                  textStyle: TextStyle(fontSize: 22, color: Colors.black))),
+        ),
+        body: Builder(
+          builder: (context) {
+            toas();
+            return SingleChildScrollView(
               child: Column(
                 children: [
                   Container(
                     height: 200,
                     width: double.infinity,
-                    margin: EdgeInsets.only(left: 10,right: 10,bottom: 10,top: 20),
+                    margin: EdgeInsets.only(
+                        left: 10, right: 10, bottom: 10, top: 20),
                     decoration: BoxDecoration(
                       image: DecorationImage(
                           image: NetworkImage(
@@ -166,7 +255,9 @@ class _HomeState extends State<Home> {
                           padding: const EdgeInsets.all(10),
                           child: Text(
                             "Search The Efficient Goal",
-                            style: GoogleFonts.signikaNegative(textStyle: TextStyle(fontSize: 24, color: Colors.black)),
+                            style: GoogleFonts.signikaNegative(
+                                textStyle: TextStyle(
+                                    fontSize: 24, color: Colors.black)),
                           ),
                         ),
                         Padding(
@@ -223,7 +314,9 @@ class _HomeState extends State<Home> {
                         padding: const EdgeInsets.all(10),
                         child: Text(
                           "Categories",
-                          style: GoogleFonts.signikaNegative(textStyle: TextStyle(fontSize: 25, color: Colors.black)),
+                          style: GoogleFonts.signikaNegative(
+                              textStyle:
+                                  TextStyle(fontSize: 25, color: Colors.black)),
                         ),
                       ),
                     ],
@@ -240,13 +333,18 @@ class _HomeState extends State<Home> {
                             Navigator.pushReplacement(
                                 context,
                                 PageRouteBuilder(
-                                  transitionDuration: Duration(milliseconds: 500),
-                                  pageBuilder:
-                                      (context, animation, secondaryAnimation) =>
-                                      Countries(Model.Category,index,Model.Category_Name),
+                                  transitionDuration:
+                                      Duration(milliseconds: 500),
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      Countries(Model.Category, index,
+                                          Model.Category_Name),
                                   transitionsBuilder: (context, animation,
                                       secondaryAnimation, child) {
-                                    return FadeTransition(opacity: animation,child: child,);
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
                                   },
                                 ));
                           },
@@ -293,7 +391,9 @@ class _HomeState extends State<Home> {
                       children: [
                         Text(
                           "Offers",
-                          style: GoogleFonts.signikaNegative(textStyle: TextStyle(fontSize: 25, color: Colors.black)),
+                          style: GoogleFonts.signikaNegative(
+                              textStyle:
+                                  TextStyle(fontSize: 25, color: Colors.black)),
                         ),
                       ],
                     ),
@@ -333,7 +433,9 @@ class _HomeState extends State<Home> {
                       children: [
                         Text(
                           "Story",
-                          style: GoogleFonts.signikaNegative(textStyle: TextStyle(fontSize: 25, color: Colors.black)),
+                          style: GoogleFonts.signikaNegative(
+                              textStyle:
+                                  TextStyle(fontSize: 25, color: Colors.black)),
                         ),
                       ],
                     ),
@@ -443,29 +545,31 @@ class _HomeState extends State<Home> {
                   ),
                 ],
               ),
-            ),
+            );
+          },
+        ),
 
-            //  Different slider Drawer example
+        //  Different slider Drawer example
 
-            // SliderDrawer(
-            //     appBar: SliderAppBar(
-            //         title: Text("GoTrip",
-            //             style: const TextStyle(
-            //                 fontSize: 22, fontWeight: FontWeight.w700))),
-            //     key: _key,
-            //     sliderOpenSize: 179,
-            //     slider: _SliderView(
-            //       // onItemClick: (title) {
-            //       //   _key.currentState!.closeSlider();
-            //       //   setState(() {
-            //       //     this.title = title;
-            //       //   });
-            //       // },
-            //     ),
-            //     child:
-            //     )
-          ),
-        );
+        // SliderDrawer(
+        //     appBar: SliderAppBar(
+        //         title: Text("GoTrip",
+        //             style: const TextStyle(
+        //                 fontSize: 22, fontWeight: FontWeight.w700))),
+        //     key: _key,
+        //     sliderOpenSize: 179,
+        //     slider: _SliderView(
+        //       // onItemClick: (title) {
+        //       //   _key.currentState!.closeSlider();
+        //       //   setState(() {
+        //       //     this.title = title;
+        //       //   });
+        //       // },
+        //     ),
+        //     child:
+        //     )
+      ),
+    );
   }
 
   Widget buildMenu() {

@@ -57,6 +57,9 @@ dependencies:
   lottie:
   http:
   dio:
+  connectivity_plus:
+  awesome_snackbar_content:
+  flutter_styled_toast:
 
 dev_dependencies:
   flutter_test:
